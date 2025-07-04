@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Bureau des Arts ESIEA Laval</title>
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+<body>
+  <header>
+    <h1>Bureau des Arts ESIEA Laval</h1>
+    <div class="nav-right">
+      <a href="/login.html" id="login-btn" class="login-btn">Login</a>
+      <div id="profile-wrapper" class="profile-wrapper" style="display:none;">
+        <img src="assets/profiles/profile.png" id="profile-btn" class="profile-btn" alt="profil" />
+        <div class="dropdown" id="profile-dropdown" style="display:none;">
+          <div class="user-info">
+            <span id="username-display">Utilisateur</span>
+          </div>
+          <button id="profile-btn-menu">Mon profil</button>
+          <button id="change-password-btn">Changer mot de passe</button>
+          <button id="my-reservations-btn">Mes réservations</button>
+          <button id="logout-btn">Logout</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="filters-bar" class="filters-bar">
+      <div class="tags-filter-group">
+        <label>Tags :
+          <select id="filter-tags">
+            <option value="">Sélectionner un tag</option>
+          </select>
+        </label>
+        <div id="selected-tags" class="selected-tags"></div>
+      </div>
+      <label>Joueurs :
+        <select id="filter-players"></select>
+      </label>
+      <label>Durée :
+        <select id="filter-duration"></select>
+      </label>
+      <button id="reset-filters">Réinitialiser</button>
+    </section>
+    
+    <section id="games-container" class="grid"></section>
+  </main>
+
+  <script src="js/app.js"></script>
+  <script src="js/nav.js"></script>
+  <script src="js/reservations.js"></script>
+  
+  <!-- Modal pour les réservations utilisateur -->
+  <div id="user-reservations-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Mes réservations</h2>
+        <span class="close" id="close-reservations-modal">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div id="user-reservations-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal pour le profil utilisateur -->
+  <div id="profile-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Mon profil</h2>
+        <span class="close" id="close-profile-modal">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div class="profile-info">
+          <div class="info-group">
+            <label>Nom d'utilisateur :</label>
+            <span id="profile-username"></span>
+          </div>
+          <div class="info-group">
+            <label>Rôle :</label>
+            <span id="profile-role"></span>
+          </div>
+          <div class="info-group">
+            <label>Membre depuis :</label>
+            <span id="profile-created"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal pour changer le mot de passe -->
+  <div id="change-password-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Changer le mot de passe</h2>
+        <span class="close" id="close-password-modal">&times;</span>
+      </div>
+      <div class="modal-body">
+        <form id="change-password-form">
+          <div class="form-group">
+            <label for="current-password">Mot de passe actuel *</label>
+            <input type="password" id="current-password" required />
+          </div>
+          <div class="form-group">
+            <label for="new-password">Nouveau mot de passe *</label>
+            <div class="password-container">
+              <input type="password" id="new-password" required />
+              <div class="password-requirements">
+                <small>Le mot de passe doit contenir :</small>
+                <ul>
+                  <li>Au moins 8 caractères</li>
+                  <li>Une lettre minuscule</li>
+                  <li>Une lettre majuscule</li>
+                  <li>Un chiffre</li>
+                  <li>Un caractère spécial (@$!%*?&)</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="confirm-password">Confirmer le nouveau mot de passe *</label>
+            <input type="password" id="confirm-password" required />
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn-primary">Changer le mot de passe</button>
+            <button type="button" id="cancel-password" class="btn-secondary">Annuler</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

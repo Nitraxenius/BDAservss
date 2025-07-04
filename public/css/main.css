@@ -1,0 +1,10 @@
+/* ===== FICHIER CSS PRINCIPAL ===== */
+/* Import de tous les fichiers CSS organisés par fonctionnalité */
+
+@import url('base.css');
+@import url('cards.css');
+@import url('filters.css');
+@import url('modals.css');
+@import url('calendar.css');
+@import url('reservations.css');
+@import url('admin.css'); 

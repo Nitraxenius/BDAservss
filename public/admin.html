@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin | Bureau des Jeux</title>
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+<body>
+  <header>
+    <h1>Dashboard Admin</h1>
+    <div class="nav-right">
+      <div id="profile-wrapper" class="profile-wrapper">
+        <img src="assets/profiles/profile.png" id="profile-btn" class="profile-btn" alt="profil" />
+        <div class="dropdown" id="profile-dropdown">
+          <a href="/" style="display:block;padding:6px 0;text-decoration:none;">Accueil</a>
+          <button id="logout-btn">Logout</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="admin-container">
+    <!-- Navigation des onglets -->
+    <nav class="admin-tabs">
+      <button class="tab-btn active" data-tab="games">Gestion des Jeux</button>
+      <button class="tab-btn" data-tab="reservations">Gestion des Réservations</button>
+      <button class="tab-btn" data-tab="cotisants">Gestion des Cotisants</button>
+      <button class="tab-btn" data-tab="system">Système</button>
+    </nav>
+
+    <!-- Onglet Gestion des Jeux -->
+    <div id="games-tab" class="tab-content active">
+      <section>
+        <h2>Tous les jeux</h2>
+        <table class="games-table">
+          <thead>
+            <tr>
+              <th>Nom</th><th>Joueurs</th><th>Âge</th><th>Tags</th><th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="games-body"></tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2 id="form-title">Ajouter un jeu</h2>
+        <form id="game-form">
+          <input name="id" type="hidden" />
+          <input name="name" placeholder="Nom" required />
+          <input name="players" placeholder="Nombre de joueurs" required />
+          <input name="duration" placeholder="Durée" required />
+          <input name="age" placeholder="Âge" required />
+          <input name="image" type="file" accept="image/*" />
+          <input name="tags" placeholder="Tags (séparés par ,)" />
+          <textarea name="description" placeholder="Description" required></textarea>
+          <input name="rules" placeholder="URL des règles" />
+          <button type="submit">Enregistrer</button>
+          <button type="button" id="cancel-edit" style="display:none;">Annuler</button>
+        </form>
+      </section>
+    </div>
+
+    <!-- Onglet Gestion des Réservations -->
+    <div id="reservations-tab" class="tab-content">
+      <section>
+        <h2>Réservations en attente</h2>
+        <div id="pending-reservations">
+          <p>Aucune réservation en attente</p>
+        </div>
+      </section>
+    </div>
+
+    <!-- Onglet Gestion des Cotisants -->
+    <div id="cotisants-tab" class="tab-content">
+      <section>
+        <h2>Gestion des cotisants</h2>
+        <div class="cotisants-container">
+          <div class="cotisants-actions">
+            <button id="add-cotisant-btn" class="btn-primary">Ajouter un cotisant</button>
+          </div>
+          
+          <table class="cotisants-table">
+            <thead>
+              <tr>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Email</th>
+                <th>Statut</th>
+                <th>Date d'expiration</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="cotisants-body"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <!-- Onglet Système -->
+    <div id="system-tab" class="tab-content">
+      <section>
+        <h2>Gestion du système</h2>
+        <div class="system-container">
+          <div class="system-card">
+            <h3>Tokens d'authentification</h3>
+            <div class="token-stats">
+              <div class="stat-item">
+                <span class="stat-label">Total des tokens :</span>
+                <span id="total-tokens" class="stat-value">-</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Tokens actifs :</span>
+                <span id="active-tokens" class="stat-value">-</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Tokens révoqués :</span>
+                <span id="revoked-tokens" class="stat-value">-</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Tokens expirés :</span>
+                <span id="expired-tokens" class="stat-value">-</span>
+              </div>
+            </div>
+            <div class="system-actions">
+              <button id="refresh-token-stats" class="btn-secondary">Actualiser les stats</button>
+              <button id="cleanup-tokens" class="btn-primary">Nettoyer les tokens</button>
+            </div>
+            <div id="cleanup-result" class="cleanup-result" style="display: none;"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Modal pour ajouter/modifier un cotisant -->
+  <div id="cotisant-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="cotisant-modal-title">Ajouter un cotisant</h3>
+        <span class="close" id="close-cotisant-modal">&times;</span>
+      </div>
+      <div class="modal-body">
+        <form id="cotisant-form">
+          <input type="hidden" id="cotisant-id" />
+          <div class="form-group">
+            <label for="cotisant-nom">Nom *</label>
+            <input type="text" id="cotisant-nom" required />
+          </div>
+          <div class="form-group">
+            <label for="cotisant-prenom">Prénom *</label>
+            <input type="text" id="cotisant-prenom" required />
+          </div>
+          <div class="form-group">
+            <label for="cotisant-email">Email *</label>
+            <input type="email" id="cotisant-email" required />
+          </div>
+          <div class="form-group">
+            <label for="cotisant-date-expiration">Date d'expiration *</label>
+            <input type="date" id="cotisant-date-expiration" required />
+          </div>
+          <div class="form-group">
+            <label for="cotisant-statut">Statut</label>
+            <select id="cotisant-statut">
+              <option value="actif">Actif</option>
+              <option value="inactif">Inactif</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="cotisant-notes">Notes</label>
+            <textarea id="cotisant-notes" rows="3"></textarea>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn-primary">Enregistrer</button>
+            <button type="button" id="cancel-cotisant" class="btn-secondary">Annuler</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/nav.js"></script>      <!-- pour logout / avatar -->
+  <script src="js/admin.js"></script>    <!-- CRUD -->
+  <script src="js/admin-reservations.js"></script>    <!-- Gestion des réservations -->
+  <script src="js/admin-cotisants.js"></script>    <!-- Gestion des cotisants -->
+  <script src="js/admin-tabs.js"></script>    <!-- Navigation des onglets -->
+  <script src="js/admin-system.js"></script>    <!-- Gestion du système -->
+</body>
+</html>

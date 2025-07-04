@@ -1,0 +1,263 @@
+/* ===== INTERFACE D'ADMINISTRATION ===== */
+
+.admin-container {
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 1rem;
+  display: grid;
+  gap: 3rem;
+}
+
+/* ===== ONGLETS ADMIN ===== */
+
+.admin-tabs {
+  display: flex;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 8px 8px 0 0;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.tab-btn {
+  flex: 1;
+  background: #f8f9fa;
+  border: none;
+  padding: 1rem;
+  cursor: pointer;
+  font-weight: 600;
+  color: #666;
+  transition: all 0.2s;
+  border-bottom: 3px solid transparent;
+}
+
+.tab-btn:hover {
+  background: #e9ecef;
+  color: #333;
+}
+
+.tab-btn.active {
+  background: #fff;
+  color: #007bff;
+  border-bottom-color: #007bff;
+}
+
+.tab-content {
+  display: none;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 2rem;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.tab-content.active {
+  display: block;
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== TABLEAUX ===== */
+
+.games-table,
+.cotisants-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 4px;
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.games-table th,
+.games-table td,
+.cotisants-table th,
+.cotisants-table td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.games-table th,
+.cotisants-table th {
+  background: #2196f3;
+  color: #fff;
+  padding: 12px 10px;
+  font-weight: 600;
+}
+
+.games-table thead tr:hover,
+.cotisants-table thead tr:hover {
+  background: #2196f3;
+  cursor: default;
+}
+
+.games-table tbody tr:nth-child(even),
+.cotisants-table tbody tr:nth-child(even) {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.games-table tbody tr:hover,
+.cotisants-table tbody tr:hover {
+  background: #fafafa;
+}
+
+/* ===== BOUTONS D'ACTION ===== */
+
+.games-table button,
+.cotisants-table button {
+  margin-right: 6px;
+  padding: 4px 8px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: opacity 0.2s;
+}
+
+.games-table .edit-btn,
+.cotisants-table .edit-btn {
+  background: #1976d2;
+  color: #fff;
+}
+
+.games-table .edit-btn:hover,
+.cotisants-table .edit-btn:hover {
+  opacity: 0.85;
+}
+
+.games-table .del-btn,
+.cotisants-table .del-btn {
+  background: #e53935;
+  color: #fff;
+}
+
+.games-table .del-btn:hover,
+.cotisants-table .del-btn:hover {
+  opacity: 0.85;
+}
+
+.games-table button:hover,
+.cotisants-table button:hover {
+  opacity: 0.9;
+}
+
+/* ===== FORMULAIRES ADMIN ===== */
+
+#game-form {
+  display: grid;
+  gap: 8px;
+}
+
+#game-form input,
+#game-form textarea {
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+#game-form textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+#game-form button {
+  width: max-content;
+  background: #4caf50;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 16px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+#game-form button:hover {
+  opacity: 0.9;
+}
+
+.file-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.file-label input {
+  margin-top: 6px;
+}
+
+input[type="file"] {
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #fff;
+}
+
+/* ===== COTISANTS ===== */
+
+.cotisants-container {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.cotisants-actions {
+  margin-bottom: 1.5rem;
+}
+
+.cotisants-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.cotisants-table th {
+  background: #2196f3;
+  color: #fff;
+  padding: 12px;
+  font-weight: 600;
+}
+
+/* ===== STATUTS ===== */
+
+.status {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-active {
+  background: #e8f5e8;
+  color: #2e7d32;
+}
+
+.status-inactive {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.expired {
+  color: #f44336;
+  font-weight: 600;
+}
+
+.no-data {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+  font-style: italic;
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin: 1rem 0;
+} 

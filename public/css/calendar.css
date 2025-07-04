@@ -1,0 +1,167 @@
+/* ===== CALENDRIER DE RÉSERVATION ===== */
+
+.calendar-container {
+  margin-bottom: 1.5rem;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  background: #f8f9fa;
+  border-radius: 4px;
+}
+
+.calendar-header button {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+.calendar-header button:hover {
+  background: #0056b3;
+}
+
+.calendar-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #333;
+  font-weight: 600;
+}
+
+.calendar-grid {
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.calendar-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  background: #e9ecef;
+  font-weight: 600;
+  color: #495057;
+}
+
+.calendar-days > div {
+  padding: 0.75rem;
+  text-align: center;
+  border-bottom: 1px solid #dee2e6;
+  border-right: 1px solid #dee2e6;
+}
+
+.calendar-days > div:last-child {
+  border-right: none;
+}
+
+.calendar-week {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.calendar-day {
+  padding: 0.75rem;
+  text-align: center;
+  border-bottom: 1px solid #dee2e6;
+  border-right: 1px solid #dee2e6;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  position: relative;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.calendar-day:last-child {
+  border-right: none;
+}
+
+.calendar-day:hover {
+  background-color: #f8f9fa;
+}
+
+.calendar-day.other-month {
+  color: #adb5bd;
+  background-color: #f8f9fa;
+}
+
+.calendar-day.today {
+  background-color: #e3f2fd;
+  font-weight: 600;
+  color: #1976d2;
+}
+
+.calendar-day.reserved {
+  background-color: #ffebee;
+  color: #c62828;
+  font-weight: 600;
+}
+
+.calendar-day.pending {
+  background-color: #fff3e0;
+  color: #ef6c00;
+  font-weight: 600;
+}
+
+/* ===== FORMULAIRE DE RÉSERVATION ===== */
+
+.reservation-form {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+
+.reservation-form h3 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: #333;
+  font-size: 1.1rem;
+}
+
+/* ===== LÉGENDE ===== */
+
+.legend {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 4px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.legend-color {
+  width: 16px;
+  height: 16px;
+  border-radius: 2px;
+  border: 1px solid #ddd;
+}
+
+.legend-color.free {
+  background-color: #fff;
+}
+
+.legend-color.reserved {
+  background-color: #ffebee;
+}
+
+.legend-color.pending {
+  background-color: #fff3e0;
+} 

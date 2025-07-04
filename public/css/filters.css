@@ -1,0 +1,104 @@
+/* ===== FILTRES ET RECHERCHE ===== */
+
+.filters-bar {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 1rem;
+  margin: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.07);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+}
+
+.tags-filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.filters-bar label {
+  font-weight: 600;
+  color: #333;
+  margin-right: 0.5rem;
+}
+
+.filters-bar select {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: white;
+  min-width: 120px;
+  font-size: 0.9rem;
+}
+
+.filters-bar select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.filters-bar button {
+  background: #6c757d;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+.filters-bar button:hover {
+  background: #545b62;
+}
+
+/* Tags sélectionnés */
+.selected-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.selected-tags:empty {
+  display: none;
+}
+
+.tag-chip {
+  background: #007bff;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.tag-chip:hover {
+  background: #0056b3;
+}
+
+.remove-tag {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.7rem;
+  font-weight: bold;
+  transition: background-color 0.2s;
+}
+
+.remove-tag:hover {
+  background: rgba(255, 255, 255, 0.3);
+} 

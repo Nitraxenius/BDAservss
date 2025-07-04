@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8" /><title>Register</title><link rel="stylesheet" href="css/main.css" /></head>
+<body>
+  <div class="auth-box">
+    <h2>Créer un compte</h2>
+    <form id="register-form">
+      <input type="text" name="username" placeholder="Nom d'utilisateur" required />
+      <input type="email" name="email" placeholder="Email" required />
+      <div class="password-container">
+        <input type="password" name="password" placeholder="Mot de passe" required />
+        <div class="password-requirements">
+          <small>Le mot de passe doit contenir :</small>
+          <ul>
+            <li>Au moins 8 caractères</li>
+            <li>Une lettre minuscule</li>
+            <li>Une lettre majuscule</li>
+            <li>Un chiffre</li>
+            <li>Un caractère spécial (@$!%*?&)</li>
+          </ul>
+        </div>
+      </div>
+      <button type="submit">Register</button>
+    </form>
+    <p class="auth-switch">Déjà inscrit ? <a href="/login.html">Se connecter</a></p>
+  </div>
+  <script src="js/auth.js"></script>
+</body>
+</html>

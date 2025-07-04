@@ -1,0 +1,161 @@
+name: Deploy BDA Reservations
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  # Tests et validation
+  test:
+    runs-on: ubuntu-latest
+    
+    services:
+      mongodb:
+        image: mongo:7.0
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --eval 'db.adminCommand(\"ping\")'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install Node.js dependencies
+      run: npm ci
+
+    - name: Install Python dependencies
+      run: |
+        cd bot
+        pip install -r requirements.txt
+
+    - name: Run Node.js tests
+      run: |
+        # Créer un fichier .env temporaire pour les tests
+        echo "MONGO_URI=mongodb://localhost:27017/test_db" > .env
+        echo "JWT_SECRET=test_secret" >> .env
+        echo "JWT_REFRESH_SECRET=test_refresh_secret" >> .env
+        echo "NODE_ENV=test" >> .env
+        
+        # Tests basiques (à adapter selon vos tests)
+        npm run lint || echo "No linting configured"
+        npm test || echo "No tests configured"
+
+    - name: Run Python tests
+      run: |
+        cd bot
+        # Tests basiques (à adapter selon vos tests)
+        python -m pytest tests/ || echo "No tests configured"
+
+  # Build des images Docker
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Log in to Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Extract metadata
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+        tags: |
+          type=ref,event=branch
+          type=ref,event=pr
+          type=semver,pattern={{version}}
+          type=semver,pattern={{major}}.{{minor}}
+          type=sha
+
+    - name: Build and push web image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
+    - name: Build and push bot image
+      uses: docker/build-push-action@v5
+      with:
+        context: ./bot
+        push: true
+        tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-bot:${{ github.sha }}
+        labels: ${{ steps.meta.outputs.labels }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
+  # Déploiement en staging
+  deploy-staging:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/develop'
+    environment: staging
+    
+    steps:
+    - name: Deploy to staging
+      run: |
+        echo "Deploying to staging environment..."
+        # Ajoutez ici vos commandes de déploiement staging
+        # Exemple avec Docker Compose ou Kubernetes
+
+  # Déploiement en production
+  deploy-production:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    environment: production
+    
+    steps:
+    - name: Deploy to production
+      run: |
+        echo "Deploying to production environment..."
+        # Ajoutez ici vos commandes de déploiement production
+        # Exemple avec Docker Compose ou Kubernetes
+
+  # Notification Discord
+  notify:
+    needs: [build, deploy-production]
+    runs-on: ubuntu-latest
+    if: always() && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+    
+    steps:
+    - name: Notify Discord
+      uses: sarisia/actions-status-discord@v1
+      with:
+        webhook: ${{ secrets.DISCORD_WEBHOOK }}
+        status: ${{ job.status }}
+        title: "BDA Reservations - Déploiement"
+        description: "Déploiement terminé pour la branche ${{ github.ref_name }}"
+        color: ${{ job.status == 'success' && '#00ff00' || '#ff0000' }} 

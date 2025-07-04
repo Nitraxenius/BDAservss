@@ -1,0 +1,105 @@
+services:
+  # Base de données MongoDB avec authentification
+  mongodb:
+    image: mongo:7.0
+    container_name: bda-mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${DATABASE_NAME}
+      MONGO_APP_USERNAME: ${MONGO_APP_USERNAME}
+      MONGO_APP_PASSWORD: ${MONGO_APP_PASSWORD}
+    volumes:
+      - mongodb_data:/data/db
+      - ./mongo-init:/docker-entrypoint-initdb.d
+    ports:
+      - "27017:27017"
+    networks:
+      - bda-network
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Site web Node.js (interne, accessible uniquement via Nginx)
+  web:
+    build: .
+    container_name: bda-web
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=${NODE_ENV:-development}
+      - PORT=3000
+      - MONGO_URI=mongodb://${MONGO_APP_USERNAME}:${MONGO_APP_PASSWORD}@mongodb:27017/${DATABASE_NAME}?authSource=${DATABASE_NAME}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_REFRESH_SECRET=${JWT_SECRET}
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-https://localhost,http://localhost:3000,http://127.0.0.1:3000}
+    expose:
+      - "3000"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - bda-network
+    volumes:
+      - ./logs:/app/logs
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Reverse proxy Nginx avec HTTPS
+  nginx:
+    build: ./nginx
+    container_name: bda-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      web:
+        condition: service_healthy
+    networks:
+      - bda-network
+    volumes:
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - ./nginx/logs:/var/log/nginx
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Bot Discord Python
+  bot:
+    build: ./bot
+    container_name: bda-bot
+    restart: unless-stopped
+    environment:
+      - DISCORD_TOKEN=${DISCORD_TOKEN}
+      - GUILD_ID=${GUILD_ID}
+      - CHANNEL_ID=${CHANNEL_ID}
+      - ADMIN_ROLE_ID=${ADMIN_ROLE_ID}
+      - MONGODB_URI=mongodb://${MONGO_APP_USERNAME}:${MONGO_APP_PASSWORD}@mongodb:27017/${DATABASE_NAME}?authSource=${DATABASE_NAME}
+      - DATABASE_NAME=${DATABASE_NAME}
+      - BOT_PREFIX=${BOT_PREFIX:-!}
+      - BOT_NAME=${BOT_NAME:-BDA Reservations Bot}
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      web:
+        condition: service_healthy
+    networks:
+      - bda-network
+    volumes:
+      - ./bot/logs:/app/logs
+
+volumes:
+  mongodb_data:
+    driver: local
+
+networks:
+  bda-network:
+    driver: bridge

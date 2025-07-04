@@ -1,8 +1,8 @@
 import os
 from dotenv import load_dotenv
 
-# Charger les variables d'environnement
-load_dotenv('.envbot')
+# Charger les variables d'environnement (optionnel, car Docker les fournit)
+load_dotenv('.env', override=False)
 
 class Config:
     # Configuration Discord

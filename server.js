@@ -31,13 +31,19 @@ app.use(helmet({
 // CORS sécurisé - spécifier les origines autorisées
 const allowedOrigins = process.env.ALLOWED_ORIGINS ? 
   process.env.ALLOWED_ORIGINS.split(',') : 
-  ['http://localhost:3000', 'http://127.0.0.1:3000'];
+  ['http://localhost:3000', 'http://127.0.0.1:3000', 'https://localhost', 'http://localhost'];
 
 app.use(cors({ 
   origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
+    // En développement, accepter toutes les origines locales
+    if (!origin || 
+        allowedOrigins.includes(origin) || 
+        origin.startsWith('http://localhost') || 
+        origin.startsWith('https://localhost') ||
+        origin.startsWith('http://127.0.0.1')) {
       callback(null, true);
     } else {
+      console.log('CORS bloqué pour origine:', origin);
       callback(new Error('Not allowed by CORS'));
     }
   },
@@ -106,6 +112,15 @@ app.get('/api/admin/token-stats', protect, adminOnly, async (req, res) => {
     console.error('Erreur récupération stats:', error);
     res.status(500).json({ error: 'Erreur lors de la récupération des statistiques' });
   }
+});
+
+// Route de santé pour Docker healthcheck
+app.get('/api/health', (req, res) => {
+  res.json({ 
+    status: 'OK', 
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime()
+  });
 });
 
 // Routes

@@ -57,3 +57,5 @@ test-results/
 *.tmp
 *.swp
 *.lock
+*.pem
+*.key
